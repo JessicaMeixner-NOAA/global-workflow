@@ -524,11 +524,8 @@ CICE_postdet() {
     local seconds
     seconds=$(to_seconds "${restart_date:8:2}0000")  # convert HHMMSS to seconds
     cice_restart_file="${DATArestart}/CICE_RESTART/cice_model.res.${restart_date:0:4}-${restart_date:4:2}-${restart_date:6:2}-${seconds}.nc"
-    if [[ "${DO_JEDIOCNVAR:-NO}" = "YES" && "${restart_date}" = "${sdate_current_cycle}" ]]; then
-      cice_restart_file="${COM_ICE_ANALYSIS}/${restart_date:0:8}.${restart_date:8:2}0000.cice_model_anl.res.nc"
-    fi
   else  # "${RERUN}" == "NO"
-    restart_date="${sdate_current_cycle}"
+    restart_date="${model_start_date_current_cycle}"
     cice_restart_file="${COM_ICE_RESTART_PREV}/${restart_date:0:8}.${restart_date:8:2}0000.cice_model.res.nc"      
     if [[ "${DO_JEDIOCNVAR:-NO}" = "YES" ]]; then
       cice_restart_file="${COM_ICE_ANALYSIS}/${restart_date:0:8}.${restart_date:8:2}0000.cice_model_anl.res.nc"
