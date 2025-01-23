@@ -296,7 +296,7 @@ export SDATE_GFS=@SDATE_GFS@
 
 # GFS output and frequency
 export FHMIN_GFS=0
-export FHMAX_GFS="@FHMAX_GFS@"
+export FHMAX_GFS=384
 # Intermediate times to stop forecast when running in segments
 breakpnts="@FCST_BREAKPOINTS@"
 export FCST_SEGMENTS="${FHMIN_GFS},${breakpnts:+${breakpnts},}${FHMAX_GFS}"
@@ -466,7 +466,7 @@ export binary_diag=".false."
 export DO_CA="YES"
 
 # Verification options
-export DO_METP="@DO_METP@"   # Run METPLUS jobs - set METPLUS settings in config.metp
+export DO_METP="NO"   # Run METPLUS jobs - set METPLUS settings in config.metp
 export DO_FIT2OBS="YES"      # Run fit to observations package
 export DO_VRFY_OCEANDA="@DO_VRFY_OCEANDA@"  # Run SOCA Ocean and Seaice DA verification tasks
 
@@ -475,7 +475,7 @@ export FHMAX_FITS=132
 [[ "${FHMAX_FITS}" -gt "${FHMAX_GFS}" ]] && export FHMAX_FITS=${FHMAX_GFS}
 
 # Archiving options
-export HPSSARCH="@HPSSARCH@"        # save data to HPSS archive
+export HPSSARCH="YES"        # save data to HPSS archive
 export LOCALARCH="@LOCALARCH@"        # save data to local archive
 if [[ ${HPSSARCH} = "YES" ]] && [[ ${LOCALARCH} = "YES" ]]; then
    echo "FATAL ERROR: Both HPSS and local archiving selected.  Please choose one or the other."

@@ -899,7 +899,7 @@ case ${step} in
       "C768" | "C1152")
         # Not valid resolutions for ensembles
         declare -x "walltime_gdas"="00:50:00"
-        declare -x "walltime_gfs"="06:00:00"
+        declare -x "walltime_gfs"="10:00:00"
         ;;
       *)
         echo "FATAL ERROR: Resources not defined for job ${step} at resolution ${CASE}"
@@ -992,11 +992,11 @@ case ${step} in
     ;;
 
   "genesis")
-    walltime="00:25:00"
+    walltime="01:00:00"
     ntasks=1
     threads_per_task=1
     tasks_per_node=1
-    memory="10G"
+    memory="20G"
     ;;
 
   "genesis_fsu")
