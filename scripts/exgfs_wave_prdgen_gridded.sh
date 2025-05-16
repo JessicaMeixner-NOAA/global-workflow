@@ -6,7 +6,7 @@
 # GFSv16-wave output for gridded wave fields                                  #
 #                                                                             #
 # COM inputs:                                                                 #
-#  - ${COMIN_WAVE_GRID}/${RUN}.wave.${cycle}.${grdIDin}.f${fhr}.grib2          #
+#  - ${COMIN_WAVE_GRID}/${RUN}.wave.${cycle}.${grdOut}.f${fhr}.grib2          #
 #                                                                             #
 # COM outputs:                                                                #
 #  - ${COMOUT_WAVE_WMO}/grib2.${cycle}.f${fhr}.awipsww3_${grdOut}             #
@@ -14,7 +14,7 @@
 # Origination  : 05/02/2007                                                   #
 # Last update  : 10/08/2020                                                   # 
 #                                                                             #
-# Oct, 2020  Roberto.Padilla@noaa.gov, Henrique.HAlves@noaa.gov                # 
+# Oct, 2020  Roberto.Padilla@noaa.gov, Henrique.HAlves@noaa.gov               # 
 #         - Merging wave scripts to GFSv16 global workflow                    #
 #                                                                             #
 ###############################################################################
@@ -40,11 +40,8 @@ source "${USHgfs}/wave_domain_grid.sh"
  cd "${DATA}" || exit 1
  
  echo "Starting MWW3 GRIDDED PRODUCTS SCRIPT"
-# Input grid
-grid_in="${waveinterpGRD:-glo_15mxt}"
 # Output grids
-grids=${GEMPAK_GRIDS:-ak_10m at_10m ep_10m wc_10m glo_30m}
-# export grids=${wavepostGRD}
+grids=${GEMPAK_GRIDS:-'aoc_9km at_10m ep_10m wc_10m glo_30m'}
  maxtries=${maxtries:-720}
 # 0.b Date and time stuff
  start_time=$(date)
@@ -82,26 +79,24 @@ grids=${GEMPAK_GRIDS:-ak_10m at_10m ep_10m wc_10m glo_30m}
 
 # 1.a Grib file (AWIPS and FAX charts)
  # Get input grid
- # TODO flesh this out with additional input grids if needed
- process_grdID "${grid_in}"
- grdIDin="${grdNAME}"
 
  fhcnt="${fstart}"
  while [[ "${fhcnt}" -le "${FHMAX_WAV}" ]]; do
    fhr=$(printf "%03d" "${fhcnt}")
    for grdOut in ${grids}; do
      process_grdID "${grdOut}"
-     grdIDin="${grdNAME}"
-     com_varname="COMIN_WAVE_GRID_${GRDREGION}_${GRDRES}"
-     com_dir="${!com_varname}"
 
-     GRIBIN="${com_dir}/${RUN}.wave.${cycle}.${grdIDin}.f${fhr}.grib2"
+     com_varname="COMIN_WAVE_GRID_${GRDREGION}_${GRDRES}"
+     com_dir=${!com_varname}
+
+
+     GRIBIN="${com_dir}/${RUN}.wave.${cycle}.${GRDREGION}.${GRDRES}.f${fhr}.grib2"
      GRIBIN_chk="${GRIBIN}.idx"
      sleep_interval=5
      max_tries=1000
      if ! wait_for_file "${GRIBIN_chk}" "${sleep_interval}" "${max_tries}"; then
        echo "FATAL ERROR: ${GRIBIN_chk} not found after waiting $((sleep_interval * ( max_tries - 1))) secs"
-       echo "${RUN} wave ${grdIDin} ${fhr} prdgen ${date} ${cycle} : GRIB file missing."
+       echo "${RUN} wave ${GRDREGION}.${GRDRES} ${fhr} prdgen ${date} ${cycle} : GRIB file missing."
        err=1;export err;${errchk} || exit "${err}"
      fi
      GRIBOUT="${RUN}.wave.${cycle}.${grdID}.f${fhr}.clipped.grib2"
@@ -222,7 +217,7 @@ grids=${GEMPAK_GRIDS:-ak_10m at_10m ep_10m wc_10m glo_30m}
      #set +x
 
 
-     if [[ "${SENDDBN}" != 'YES' ]]
+     if [[ "${SENDDBN}" = 'YES' ]]
      then
        echo "      Sending ${AWIPSGRB}.${grdID}.f${fhr} to DBRUN."
        "${DBNROOT}/bin/dbn_alert" GRIB_LOW "${RUN}" "${job}" "${COMOUT_WAVE_WMO}/grib2.${cycle}.f${fhr}.awipsww3_${grdOut}"
