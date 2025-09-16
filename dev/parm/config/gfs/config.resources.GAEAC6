@@ -79,8 +79,7 @@ case ${step} in
   "marineanlecen")
     case ${OCNRES} in
       "025")
-        ntasks=280
-        tasks_per_node=10
+        tasks_per_node=24
         ;;
       *)
         ;;
