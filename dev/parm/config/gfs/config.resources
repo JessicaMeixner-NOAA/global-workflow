@@ -523,7 +523,6 @@ case ${step} in
   "marinebmat")
     npes=16
     ntasks=16
-    walltime="00:30:00"
     case ${OCNRES} in
       "025")
         ntasks=480
@@ -537,6 +536,7 @@ case ${step} in
         exit 4
     esac
 
+    walltime="00:30:00"
     threads_per_task=1
     export is_exclusive=True
     tasks_per_node=$(( max_tasks_per_node / 2 ))
