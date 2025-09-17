@@ -527,8 +527,6 @@ case ${step} in
     case ${OCNRES} in
       "025")
         ntasks=480
-        memory="500GB"
-	walltime="00:45:00"
         memory="${mem_node_max}"
         ;;
       "050")  ntasks=16;;
