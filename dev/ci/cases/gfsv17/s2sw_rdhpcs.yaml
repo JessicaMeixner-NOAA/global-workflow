@@ -17,16 +17,11 @@ base:
   DO_FIT2OBS: "YES"
   DO_VERFOZN: "YES"
   DO_VERFRAD: "YES"
-  #EUPD_CYC: "both"
-  EUPD_CYC: "gdas"
-  #INTERVAL_GFS: 6
-  INTERVAL_GFS: 24
+  EUPD_CYC: "both"
+  INTERVAL_GFS: 6
   SDATE_GFS: 2024111512
-  #FHMAX_GFS: 384
-  #FHMAX_HF_GFS: 120
-  FHMAX_GFS: 240
-  FHMAX_HF_GFS: 0
-  CASE_HIST: "C768"
+  FHMAX_GFS: 384
+  FHMAX_HF_GFS: 120
 
 prepoceanobs:
   use_exp_obs: "YES"

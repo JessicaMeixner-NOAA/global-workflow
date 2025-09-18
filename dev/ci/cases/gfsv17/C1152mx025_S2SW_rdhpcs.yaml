@@ -17,7 +17,7 @@ experiment:
   icsdir: /gpfs/f6/gfs-cpu/world-shared/Jessica.Meixner/RETRO_GFSv17/IC/v2 
   #msu
   #icsdir: /work2/noaa/global/role-global/data/ICSDIR/retro_ICs
-  yaml: {{ HOMEgfs }}/dev/ci/cases/gfsv17/s2sw.yaml
+  yaml: {{ HOMEgfs }}/dev/ci/cases/gfsv17/s2sw_rdhpcs.yaml
 
 workflow:
   engine: rocoto
