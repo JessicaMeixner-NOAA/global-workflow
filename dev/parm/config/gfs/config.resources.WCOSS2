@@ -41,7 +41,7 @@ case ${step} in
   "eupd")
     case "${CASE_HIST}" in
       "C1152" | "C768" | "C384")
-        if [[ "${RUN}" = *gdas ]]; then
+	if [[ "${RUN}" = *gdas ]]; then
           export ntasks=315
         elif [[ "${RUN}" = *gfs ]]; then
           export ntasks=135
