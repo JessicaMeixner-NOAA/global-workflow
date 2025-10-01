@@ -195,14 +195,14 @@ if [[ "$DOIAU" == "YES" ]]; then
             if [[ ${TILE_NUM} -eq 1 ]]; then
                 mkdir -p "${COMOUT_ATMOS_RESTART_MEM}"
             fi
-            cpreq "${sfcdata_dir}/${bPDY}.${bcyc}0000.sfc_data.tile${n}.nc" \
+            ${NLN} "${sfcdata_dir}/${bPDY}.${bcyc}0000.sfc_data.tile${n}.nc" \
                 "${DATA}/fnbgsi.${cmem}"
             cpreq "${DATA}/fnbgsi.${cmem}" "${DATA}/fnbgso.${cmem}"
             cpreq "${FIXgfs}/orog/${CASE}/${CASE}_grid.tile${n}.nc"     "${DATA}/fngrid.${cmem}"
             cpreq "${FIXgfs}/orog/${CASE}/${CASE}.mx${OCNRES}_oro_data.tile${n}.nc" "${DATA}/fnorog.${cmem}"
 
             if [[ "${DO_GSISOILDA}" == "YES" ]]; then
-                 cpreq "${COMIN_ATMOS_ANALYSIS_MEM}/sfci00${LFHR}.tile${n}.nc" \
+                 ${NLN} "${COMIN_ATMOS_ANALYSIS_MEM}/sfci00${LFHR}.tile${n}.nc" \
                    "${DATA}/soil_xainc.${cmem}"
             fi
 
@@ -270,7 +270,7 @@ if [[ "${DOSFCANL_ENKF}" == "YES" ]]; then
                 sfcdata_dir="${COMIN_ATMOS_RESTART_MEM_PREV}"
             fi
 
-            cpreq "${sfcdata_dir}/${PDY}.${cyc}0000.sfc_data.tile${n}.nc" \
+            ${NLN} "${sfcdata_dir}/${PDY}.${cyc}0000.sfc_data.tile${n}.nc" \
                 "${DATA}/fnbgsi.${cmem}"
             cpreq "${DATA}/fnbgsi.${cmem}" "${DATA}/fnbgso.${cmem}"
             cpreq "${FIXgfs}/orog/${CASE}/${CASE}_grid.tile${n}.nc"      "${DATA}/fngrid.${cmem}"
