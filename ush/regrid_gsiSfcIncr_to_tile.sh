@@ -91,30 +91,7 @@ for imem in $(seq 1 "${NMEM_REGRID}"); do
             COMIN_SOIL_ANALYSIS_MEM:COM_ATMOS_ANALYSIS_TMPL
     fi
 
-    if [[ "${DO_LAND_IAU}" = ".true." ]]; then 
-
-        export add_time_dim=".true."
-        export time_list="${IAUFHRS}"
-
-        rm -f "regrid.nml"
-        atparse < "${regrid_nml_tmpl}" >> "regrid.nml"
-
-        for FHI in "${landifhrs[@]}"; do
-            ${NLN} "${COMIN_SOIL_ANALYSIS_MEM}/${APREFIX_ENS}sfci00${FHI}.nc" \
-                  "${DATA}/enkfgdas.sfci00${FHI}.nc"
-        done
-        
-        export pgm="${REGRID_EXEC}"
-	      ${APRUN_REGRID} "${REGRID_EXEC}" "${REDOUT}${PGMOUT}" "${REDERR}${PGMERR}"
-	      export err=$?
-	      if [[ ${err} -ne 0 ]]; then
-	          err_exit "${pgm} failed, ABORT!"
-	      fi
-
-        for n in $(seq 1 "${ntiles}"); do
-            cpfs "${DATA}/sfci.tile${n}.nc"  "${COMOUT_ATMOS_ANALYSIS_MEM}/sfc_inc.tile${n}.nc"
-        done
-    else
+    if [[ "${DO_LAND_IAU}" = ".false." || "${RUN}" == "gdas" ]]; then
         for FHR in "${soilinc_fhrs[@]}"; do
 
             export add_time_dim=".false."
@@ -131,6 +108,31 @@ for imem in $(seq 1 "${NMEM_REGRID}"); do
             for n in $(seq 1 "${ntiles}"); do
                 cpfs "${DATA}/sfci.tile${n}.nc"  "${COMOUT_ATMOS_ANALYSIS_MEM}/sfci00${FHR}.tile${n}.nc"
             done
+        done
+    fi
+
+    if [[ "${DO_LAND_IAU}" = ".true." ]]; then 
+
+        export add_time_dim=".true."
+        export time_list="${IAUFHRS}"
+
+        rm -f "regrid.nml"
+        atparse < "${regrid_nml_tmpl}" >> "regrid.nml"
+
+        for FHI in "${landifhrs[@]}"; do
+            ${NLN} "${COMIN_SOIL_ANALYSIS_MEM}/${APREFIX_ENS}sfci00${FHI}.nc" \
+                  "${DATA}/enkfgdas.sfci00${FHI}.nc"
+        done
+        
+        export pgm="${REGRID_EXEC}"
+        ${APRUN_REGRID} "${REGRID_EXEC}" "${REDOUT}${PGMOUT}" "${REDERR}${PGMERR}"
+        export err=$?
+        if [[ ${err} -ne 0 ]]; then
+            err_exit "${pgm} failed, ABORT!"
+        fi
+
+        for n in $(seq 1 "${ntiles}"); do
+            cpfs "${DATA}/sfci.tile${n}.nc"  "${COMOUT_ATMOS_ANALYSIS_MEM}/sfc_inc.tile${n}.nc"
         done
     fi
 
