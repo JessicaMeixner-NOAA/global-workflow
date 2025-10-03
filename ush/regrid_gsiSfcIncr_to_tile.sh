@@ -91,24 +91,6 @@ for imem in $(seq 1 "${NMEM_REGRID}"); do
             COMIN_SOIL_ANALYSIS_MEM:COM_ATMOS_ANALYSIS_TMPL
     fi
 
-    for FHR in "${soilinc_fhrs[@]}"; do
-
-        export add_time_dim=".false."
-        export time_list="${FHR}"
-
-        rm -f "regrid.nml"
-        atparse < "${regrid_nml_tmpl}" >> "regrid.nml"
-
-        ${NLN} "${COMIN_SOIL_ANALYSIS_MEM}/${APREFIX_ENS}sfci00${FHR}.nc" \
-               "${DATA}/enkfgdas.sfci00${FHR}.nc"
-
-        ${APRUN_REGRID} "${REGRID_EXEC}" "${REDOUT}${PGMOUT}" "${REDERR}${PGMERR}"
-
-        for n in $(seq 1 "${ntiles}"); do
-            cpfs "${DATA}/sfci.tile${n}.nc"  "${COMOUT_ATMOS_ANALYSIS_MEM}/sfci00${FHR}.tile${n}.nc"
-        done
-    done 
-
     if [[ "${DO_LAND_IAU}" = ".true." ]]; then 
 
         export add_time_dim=".true."
@@ -132,7 +114,24 @@ for imem in $(seq 1 "${NMEM_REGRID}"); do
         for n in $(seq 1 "${ntiles}"); do
             cpfs "${DATA}/sfci.tile${n}.nc"  "${COMOUT_ATMOS_ANALYSIS_MEM}/sfc_inc.tile${n}.nc"
         done
-	    
+    else
+        for FHR in "${soilinc_fhrs[@]}"; do
+
+            export add_time_dim=".false."
+            export time_list="${FHR}"
+
+            rm -f "regrid.nml"
+            atparse < "${regrid_nml_tmpl}" >> "regrid.nml"
+
+            ${NLN} "${COMIN_SOIL_ANALYSIS_MEM}/${APREFIX_ENS}sfci00${FHR}.nc" \
+               "${DATA}/enkfgdas.sfci00${FHR}.nc"
+
+            ${APRUN_REGRID} "${REGRID_EXEC}" "${REDOUT}${PGMOUT}" "${REDERR}${PGMERR}"
+
+            for n in $(seq 1 "${ntiles}"); do
+                cpfs "${DATA}/sfci.tile${n}.nc"  "${COMOUT_ATMOS_ANALYSIS_MEM}/sfci00${FHR}.tile${n}.nc"
+            done
+        done
     fi
 
 done
