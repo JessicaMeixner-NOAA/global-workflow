@@ -91,7 +91,7 @@ for imem in $(seq 1 "${NMEM_REGRID}"); do
             COMIN_SOIL_ANALYSIS_MEM:COM_ATMOS_ANALYSIS_TMPL
     fi
 
-    if [[ "${DO_LAND_IAU}" = ".false." || "${RUN}" == "gdas" ]]; then
+    if [[ "${DO_LAND_IAU}" = ".false." || "${RUN}" == "gdas" || "${RUN}" == "gfs" ]]; then
         for FHR in "${soilinc_fhrs[@]}"; do
 
             export add_time_dim=".false."
@@ -100,7 +100,7 @@ for imem in $(seq 1 "${NMEM_REGRID}"); do
             rm -f "regrid.nml"
             atparse < "${regrid_nml_tmpl}" >> "regrid.nml"
 
-            ${NLN} "${COMIN_SOIL_ANALYSIS_MEM}/${APREFIX_ENS}sfci00${FHR}.nc" \
+            cpreq "${COMIN_SOIL_ANALYSIS_MEM}/${APREFIX_ENS}sfci00${FHR}.nc" \
                "${DATA}/enkfgdas.sfci00${FHR}.nc"
 
             ${APRUN_REGRID} "${REGRID_EXEC}" "${REDOUT}${PGMOUT}" "${REDERR}${PGMERR}"
@@ -120,7 +120,7 @@ for imem in $(seq 1 "${NMEM_REGRID}"); do
         atparse < "${regrid_nml_tmpl}" >> "regrid.nml"
 
         for FHI in "${landifhrs[@]}"; do
-            ${NLN} "${COMIN_SOIL_ANALYSIS_MEM}/${APREFIX_ENS}sfci00${FHI}.nc" \
+            cpreq "${COMIN_SOIL_ANALYSIS_MEM}/${APREFIX_ENS}sfci00${FHI}.nc" \
                   "${DATA}/enkfgdas.sfci00${FHI}.nc"
         done
         
