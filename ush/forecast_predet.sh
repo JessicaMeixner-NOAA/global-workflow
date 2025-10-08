@@ -468,9 +468,10 @@ FV3_predet(){
 
   # Grid and orography data
   if [[ "${cplflx}" == ".false." ]] ; then
-    cpreq "${FIXorog}/${CASE}/${CASE}_mosaic.nc" "${DATA}/INPUT/grid_spec.nc"
+    #FIXME NLN -> cpreq
+    ${NLN} "${FIXorog}/${CASE}/${CASE}_mosaic.nc" "${DATA}/INPUT/grid_spec.nc"
   else
-    cpreq "${FIXorog}/${CASE}/${CASE}_mosaic.nc" "${DATA}/INPUT/${CASE}_mosaic.nc"
+    ${NLN} "${FIXorog}/${CASE}/${CASE}_mosaic.nc" "${DATA}/INPUT/${CASE}_mosaic.nc"
   fi
 
   # Files for GWD
@@ -479,10 +480,11 @@ FV3_predet(){
   # Files for orography, GWD tiles
   local tt
   for (( tt = 1; tt <= ntiles; tt++ )); do
-    cpreq "${FIXorog}/${CASE}/${CASE}.mx${OCNRES}_oro_data.tile${tt}.nc" "${DATA}/INPUT/oro_data.tile${tt}.nc"
-    cpreq "${FIXorog}/${CASE}/${CASE}_grid.tile${tt}.nc"                 "${DATA}/INPUT/${CASE}_grid.tile${tt}.nc"
-    cpreq "${FIXugwd}/${CASE}/${CASE}_oro_data_ls.tile${tt}.nc"          "${DATA}/INPUT/oro_data_ls.tile${tt}.nc"
-    cpreq "${FIXugwd}/${CASE}/${CASE}_oro_data_ss.tile${tt}.nc"          "${DATA}/INPUT/oro_data_ss.tile${tt}.nc"
+    #FIXME NLN -> cpreq	  
+    ${NLN} "${FIXorog}/${CASE}/${CASE}.mx${OCNRES}_oro_data.tile${tt}.nc" "${DATA}/INPUT/oro_data.tile${tt}.nc"
+    ${NLN} "${FIXorog}/${CASE}/${CASE}_grid.tile${tt}.nc"                 "${DATA}/INPUT/${CASE}_grid.tile${tt}.nc"
+    ${NLN} "${FIXugwd}/${CASE}/${CASE}_oro_data_ls.tile${tt}.nc"          "${DATA}/INPUT/oro_data_ls.tile${tt}.nc"
+    ${NLN} "${FIXugwd}/${CASE}/${CASE}_oro_data_ss.tile${tt}.nc"          "${DATA}/INPUT/oro_data_ss.tile${tt}.nc"
   done
   if [[ "${DO_NEST:-NO}" == "YES" ]] ; then
     ${NLN} "${DATA}/INPUT/oro_data.tile7.nc" "${DATA}/INPUT/oro_data.nest02.tile7.nc"
@@ -498,10 +500,11 @@ FV3_predet(){
 
   #  Thompson microphysics fix files
   if (( imp_physics == 8 )); then
-    cpreq "${FIXgfs}/am/CCN_ACTIVATE.BIN" "${DATA}/CCN_ACTIVATE.BIN"
-    cpreq "${FIXgfs}/am/freezeH2O.dat"    "${DATA}/freezeH2O.dat"
-    cpreq "${FIXgfs}/am/qr_acr_qgV2.dat"  "${DATA}/qr_acr_qgV2.dat"
-    cpreq "${FIXgfs}/am/qr_acr_qsV2.dat"  "${DATA}/qr_acr_qsV2.dat"
+    #FIXME NLN -> cpreq 	  
+    ${NLN} "${FIXgfs}/am/CCN_ACTIVATE.BIN" "${DATA}/CCN_ACTIVATE.BIN"
+    ${NLN} "${FIXgfs}/am/freezeH2O.dat"    "${DATA}/freezeH2O.dat"
+    ${NLN} "${FIXgfs}/am/qr_acr_qgV2.dat"  "${DATA}/qr_acr_qgV2.dat"
+    ${NLN} "${FIXgfs}/am/qr_acr_qsV2.dat"  "${DATA}/qr_acr_qsV2.dat"
   fi
 
   if [[ "${new_o3forc:-YES}" == "YES" ]]; then
@@ -514,15 +517,16 @@ FV3_predet(){
     O3FORC="global_o3prdlos.f77"
   fi
   H2OFORC=${H2OFORC:-"global_h2o_pltc.f77"}
-  cpreq "${FIXgfs}/am/${O3FORC}"  "${DATA}/global_o3prdlos.f77"
-  cpreq "${FIXgfs}/am/${H2OFORC}" "${DATA}/global_h2oprdlos.f77"
+  #FIXME NLN -> cpreq
+  ${NLN} "${FIXgfs}/am/${O3FORC}"  "${DATA}/global_o3prdlos.f77"
+  ${NLN} "${FIXgfs}/am/${H2OFORC}" "${DATA}/global_h2oprdlos.f77"
 
   # GFS standard input data
 
   ISOL=${ISOL:-2}
-
-  cpreq "${FIXgfs}/am/global_solarconstant_noaa_an.txt" "${DATA}/solarconstant_noaa_an.txt"
-  cpreq "${FIXgfs}/am/global_sfc_emissivity_idx.txt"    "${DATA}/sfc_emissivity_idx.txt"
+  #FIXME NLN -> cpreq
+  ${NLN} "${FIXgfs}/am/global_solarconstant_noaa_an.txt" "${DATA}/solarconstant_noaa_an.txt"
+  ${NLN} "${FIXgfs}/am/global_sfc_emissivity_idx.txt"    "${DATA}/sfc_emissivity_idx.txt"
 
   # Aerosol options
   IAER=${IAER:-1011}
@@ -548,30 +552,36 @@ FV3_predet(){
       done
       for (( month = 1; month <=12; month++ )); do
         mm=$(printf %02d "${month}")
-        cpreq "${FIXgfs}/aer/y${Syear}-${Eyear}/merra2_${Syear}-${Eyear}_${mm}.nc" "aeroclim.m${mm}.nc"
+        #FIXME NLN -> cpreq
+
+        ${NLN} "${FIXgfs}/aer/y${Syear}-${Eyear}/merra2_${Syear}-${Eyear}_${mm}.nc" "aeroclim.m${mm}.nc"
       done
     fi # if [[ "${MERRA2_6ym}" == ".true." ]];
   fi  # if (( IAER == 1011 ))
 
-  cpreq "${FIXgfs}/am/global_climaeropac_global.txt" "${DATA}/aerosol.dat"
+  #FIXME NLN -> cpreq
+  ${NLN} "${FIXgfs}/am/global_climaeropac_global.txt" "${DATA}/aerosol.dat"
   if (( IAER > 0 )) ; then
     local file
     for file in "${FIXgfs}/am/global_volcanic_aerosols"* ; do
-      cpreq "${file}" "${DATA}/$(basename "${file//global_}")"
+      #FIXME NLN -> cpreq	    
+      ${NLN} "${file}" "${DATA}/$(basename "${file//global_}")"
     done
   fi
 
-  cpreq "${FIXgfs}/lut/optics_BC.v1_3.dat"  "${DATA}/optics_BC.dat"
-  cpreq "${FIXgfs}/lut/optics_OC.v1_3.dat"  "${DATA}/optics_OC.dat"
-  cpreq "${FIXgfs}/lut/optics_DU.v15_3.dat" "${DATA}/optics_DU.dat"
-  cpreq "${FIXgfs}/lut/optics_SS.v3_3.dat"  "${DATA}/optics_SS.dat"
-  cpreq "${FIXgfs}/lut/optics_SU.v1_3.dat"  "${DATA}/optics_SU.dat"
+  #FIXME NLN -> cpreq
+  ${NLN} "${FIXgfs}/lut/optics_BC.v1_3.dat"  "${DATA}/optics_BC.dat"
+  ${NLN} "${FIXgfs}/lut/optics_OC.v1_3.dat"  "${DATA}/optics_OC.dat"
+  ${NLN} "${FIXgfs}/lut/optics_DU.v15_3.dat" "${DATA}/optics_DU.dat"
+  ${NLN} "${FIXgfs}/lut/optics_SS.v3_3.dat"  "${DATA}/optics_SS.dat"
+  ${NLN} "${FIXgfs}/lut/optics_SU.v1_3.dat"  "${DATA}/optics_SU.dat"
 
   # CO2 options
   ICO2=${ICO2:-2}
 
-  cpreq "${FIXgfs}/am/global_co2historicaldata_glob.txt" "${DATA}/co2historicaldata_glob.txt"
-  cpreq "${FIXgfs}/am/co2monthlycyc.txt"                 "${DATA}/co2monthlycyc.txt"
+  #FIXME NLN -> cpreq
+  ${NLN} "${FIXgfs}/am/global_co2historicaldata_glob.txt" "${DATA}/co2historicaldata_glob.txt"
+  ${NLN} "${FIXgfs}/am/co2monthlycyc.txt"                 "${DATA}/co2monthlycyc.txt"
   # Set historical CO2 values based on whether this is a reforecast run or not
   # Ref. issue 2403
   local co2dir
@@ -588,13 +598,15 @@ FV3_predet(){
 
   # Inline UPP fix files
   if [[ "${WRITE_DOPOST:-}" == ".true." ]]; then
-    cpreq "${POSTGRB2TBL:-${PARMgfs}/post/params_grib2_tbl_new}" "${DATA}/params_grib2_tbl_new"
-    cpreq "${PARMgfs}/ufs/post_itag_gfs"                         "${DATA}/itag"  # TODO: Need a GEFS version when available in the UFS-weather-model
+    #FIXME NLN -> cpreq	  
+    ${NLN}  "${POSTGRB2TBL:-${PARMgfs}/post/params_grib2_tbl_new}" "${DATA}/params_grib2_tbl_new"
+    ${NLN}  "${PARMgfs}/ufs/post_itag_gfs"                         "${DATA}/itag"  # TODO: Need a GEFS version when available in the UFS-weather-model
     # TODO: These should be replaced with ones from the ufs-weather-model when available there
     case ${NET} in
       gfs|gcafs)
-        cpreq "${PARMgfs}/post/gfs/postxconfig-NT-gfs-two.txt"     "${DATA}/postxconfig-NT.txt"
-        cpreq "${PARMgfs}/post/gfs/postxconfig-NT-gfs-f00-two.txt" "${DATA}/postxconfig-NT_FH00.txt"
+	#FIXME NLN -> cpreq      
+        ${NLN} "${PARMgfs}/post/gfs/postxconfig-NT-gfs-two.txt"     "${DATA}/postxconfig-NT.txt"
+        ${NLN} "${PARMgfs}/post/gfs/postxconfig-NT-gfs-f00-two.txt" "${DATA}/postxconfig-NT_FH00.txt"
         ;;
       gefs)
         cpreq "${PARMgfs}/post/gefs/postxconfig-NT-gefs.txt"       "${DATA}/postxconfig-NT.txt"
@@ -645,12 +657,14 @@ WW3_predet(){
   # Copy mod_def files for wave grids
   local ww3_grid
   #if shel, only 1 waveGRD which is linked to mod_def.ww3
-  cpreq "${COMIN_WAVE_PREP}/${RUN}.t${cyc}z.mod_def.${waveGRD}.bin" "${DATA}/mod_def.ww3"
+  #FIXME NLN -> cpreq
+  ${NLN} "${COMIN_WAVE_PREP}/${RUN}.t${cyc}z.mod_def.${waveGRD}.bin" "${DATA}/mod_def.ww3"
 
   #If pnt_wght file exists, use it to speed up initialization for unstructured grids
   # this file does not exist for structured, and the model can run without it (just slower init)
   if [[ -f "${FIXgfs}/wave/pnt_wght.${waveGRD}.nc" ]]; then
-    cpreq "${FIXgfs}/wave/pnt_wght.${waveGRD}.nc" "${DATA}/pnt_wght.ww3.nc"
+    #FIXME NLN -> cpreq
+    ${NLN} "${FIXgfs}/wave/pnt_wght.${waveGRD}.nc" "${DATA}/pnt_wght.ww3.nc"
   fi
 
   # TODO: These are generated by waveprep job, but that job is not used in v17

@@ -21,7 +21,8 @@ FV3_postdet() {
     echo "Copying FV3 cold start files for 'RUN=${RUN}' at '${current_cycle}' from '${COMIN_ATMOS_INPUT}'"
     local fv3_file
     for fv3_file in ${file_list}; do
-      cpreq "${COMIN_ATMOS_INPUT}/${fv3_file}" "${DATA}/INPUT/${fv3_file}"
+      #FIXME NLN -> cpreq
+      ${NLN} "${COMIN_ATMOS_INPUT}/${fv3_file}" "${DATA}/INPUT/${fv3_file}"
     done
 
   # warm start case
@@ -44,7 +45,8 @@ FV3_postdet() {
     local fv3_file restart_file
     for fv3_file in ${file_list}; do
       restart_file="${restart_date:0:8}.${restart_date:8:2}0000.${fv3_file}"
-      cpreq "${restart_dir}/${restart_file}" "${DATA}/INPUT/${fv3_file}"
+      #FIXME NLN -> cpreq
+      ${NLN} "${restart_dir}/${restart_file}" "${DATA}/INPUT/${fv3_file}"
     done
 
     if [[ "${RERUN}" == "YES" ]]; then
@@ -64,7 +66,8 @@ FV3_postdet() {
       for (( nn = 1; nn <= ntiles; nn++ )); do
         if [[ -f "${COMIN_ATMOS_RESTART}/${restart_date:0:8}.${restart_date:8:2}0000.sfcanl_data.tile${nn}.nc" ]]; then
           rm -f "${DATA}/INPUT/sfc_data.tile${nn}.nc"
-          cpreq "${COMIN_ATMOS_RESTART}/${restart_date:0:8}.${restart_date:8:2}0000.sfcanl_data.tile${nn}.nc" \
+          #FIXME NLN -> cpreq
+	  ${NLN} "${COMIN_ATMOS_RESTART}/${restart_date:0:8}.${restart_date:8:2}0000.sfcanl_data.tile${nn}.nc" \
                 "${DATA}/INPUT/sfc_data.tile${nn}.nc"
         # GCAFS does not run the sfcanl, only GCDAS
         elif [[ ${DO_AERO_FCST} == "YES" && -f "${COMIN_TRACER_RESTART}/${restart_date:0:8}.${restart_date:8:2}0000.sfcanl_data.tile${nn}.nc" ]]; then
@@ -251,7 +254,8 @@ EOF
             echo "FATAL ERROR: DO_LAND_IAU=${DO_LAND_IAU}, but missing increment file ${sfc_increment_file}, ABORT!"
             exit 1
           else
-            cpreq "${sfc_increment_file}" "${DATA}/INPUT/sfc_inc.tile${TN}.nc"
+	    #FIXME NLN -> cpreq	  
+            ${NLN} "${sfc_increment_file}" "${DATA}/INPUT/sfc_inc.tile${TN}.nc"
           fi
         done
 
@@ -452,7 +456,13 @@ WW3_postdet() {
   ww3_restart_dest_file="ufs.cpld.ww3.r.${restart_date:0:4}-${restart_date:4:2}-${restart_date:6:2}-${seconds}"
   if [[ -s "${ww3_restart_file}.nc" ]]; then  # First check to see if netcdf restart exists:
     export WW3_restart_from_binary=false
-    cpreq "${ww3_restart_file}.nc" "${DATA}/${ww3_restart_dest_file}.nc"
+    #FIXME - Should only be the 1 cpreq line that's commented out 
+    #cpreq "${ww3_restart_file}.nc" "${DATA}/${ww3_restart_dest_file}.nc"
+    if [[ "${RERUN}" == "YES" ]]; then
+      cpreq "${ww3_restart_file}.nc" "${DATA}/${ww3_restart_dest_file}.nc"
+    else 
+      ${NLN} "${ww3_restart_file}.nc" "${DATA}/${ww3_restart_dest_file}.nc"
+    fi       
   elif [[ -s "${ww3_restart_file}" ]]; then  # If not, check to see if binary restart exists:
     export WW3_restart_from_binary=true
     cpreq "${ww3_restart_file}" "${DATA}/${ww3_restart_dest_file}"
