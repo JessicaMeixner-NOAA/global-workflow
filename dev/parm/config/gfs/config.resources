@@ -869,7 +869,7 @@ case ${step} in
     MEDPETS=${MEDPETS:-${FV3PETS}}
     (( MEDPETS = FV3PETS ))
     (( MEDTHREADS = FV3THREADS )) 
-    (( "${MEDPETS}" > 24000 )) && MEDPETS=1200
+    (( "${MEDPETS}" > 4800 )) && MEDPETS=4800
     export MEDPETS MEDTHREADS
     echo "MEDIATOR using (threads, PETS) = (${MEDTHREADS}, ${MEDPETS})"
 
