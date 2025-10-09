@@ -158,7 +158,44 @@ FV3_predet(){
   # The $DATA/RESTART directory is used for writing FV3 restart files (it is hard-wired in the model)
   # Link the output and restart directories to the DATA directory
   ${NLN} "${DATAoutput}/FV3ATM_OUTPUT" "${DATA}/FV3ATM_OUTPUT"
-  ${NLN} "${DATArestart}/FV3_RESTART" "${DATA}/RESTART"
+  #FIXME This should just be the one line below.  Remove start to end sections of FIXME
+  #${NLN} "${DATArestart}/FV3_RESTART" "${DATA}/RESTART"
+
+  #start of FIX ME to be deleted
+  # Determine the dates for restart files to be copied to COM
+  local restart_date restart_dates
+  restart_dates=()
+
+  case ${RUN} in
+    gdas|enkfgdas) # Link restarts to COM in the assimilation window for RUN=gdas|enkfgdas
+      restart_date="${model_start_date_next_cycle}"
+      while (( restart_date <= forecast_end_cycle )); do
+        restart_dates+=("${restart_date:0:8}.${restart_date:8:2}0000")
+        restart_date=$(date --utc -d "${restart_date:0:8} ${restart_date:8:2} + ${restart_interval} hours" +%Y%m%d%H)
+      done
+      ;;
+    *)
+       ${NLN} "${DATArestart}/FV3_RESTART" "${DATA}/RESTART"
+      ;;
+  esac
+
+  ### Check that there are restart files to copy
+  if [[ ${#restart_dates[@]} -gt 0 ]]; then
+    # Get list of FV3 restart files
+    local file_list fv3_file
+    file_list=$(FV3_restarts)
+
+    mkdir -p "${DATA}/RESTART"
+    if [[ ! -d "${DATA}/RESTART" ]]; then mkdir -p "${DATA}/RESTART"; fi
+    # Copy restarts for the dates collected above to COM
+    for restart_date in "${restart_dates[@]}"; do
+      echo "linking FV3 restarts for 'RUN=${RUN}' at ${restart_date}"
+      for fv3_file in ${file_list}; do
+        ${NLN} "${COMOUT_ATMOS_RESTART}/${restart_date}.${fv3_file}" "${DATA}/RESTART/${restart_date}.${fv3_file}"
+      done
+    done
+  fi 
+  #end of FIXME to be deleted 
 
   FHZERO=${FHZERO:-6}
   FHCYC=${FHCYC:-24}

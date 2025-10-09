@@ -400,7 +400,8 @@ FV3_out() {
     gdas|enkfgdas|enkfgfs|enkfgcafs|gcdas) # Copy restarts in the assimilation window for RUN=gdas|enkfgdas|enkfgfs
       restart_date="${model_start_date_next_cycle}"
       while (( restart_date <= forecast_end_cycle )); do
-        restart_dates+=("${restart_date:0:8}.${restart_date:8:2}0000")
+	#FIXME: uncomment the line below when changing NLN-> CP      
+        #restart_dates+=("${restart_date:0:8}.${restart_date:8:2}0000")
         restart_date=$(date --utc -d "${restart_date:0:8} ${restart_date:8:2} + ${restart_interval} hours" +%Y%m%d%H)
       done
       ;;
