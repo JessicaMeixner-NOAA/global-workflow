@@ -11,8 +11,8 @@ experiment:
   start: warm
   comroot: {{ 'RUNTESTS' | getenv }}/COMROOT
   expdir: {{ 'RUNTESTS' | getenv }}/EXPDIR
-  idate: 2025051506 
-  edate: 2025061600
+  idate: 2024021506
+  edate: 2024021606
   #gaea
   icsdir: /gpfs/f6/gfs-cpu/world-shared/Jessica.Meixner/RETRO_GFSv17/IC/v2 
   #msu
