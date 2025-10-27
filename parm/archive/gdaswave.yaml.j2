@@ -3,7 +3,17 @@ gdaswave:
     name: "GDASWAVE"
     target: "{{ ATARDIR }}/{{ cycle_YMDH }}/gdaswave.tar"
     required:
-        # TODO explicitly name the wave grid/station files to archive
+        #Save HAFS restart file: 
+        - "{{ COMIN_WAVE_RESTART | relpath(ROTDIR) }}/*"
+
+        {% set offset_td = "+6H" | to_timedelta %}
+        {% set offset_dt = current_cycle | add_to_datetime(offset_td) %}
+        {% set offset_YMD = offset_dt | to_YMD %}
+        {% set offset_HH = offset_dt | strftime("%H") %}
+        {% set prefix = offset_YMD + "." + offset_HH + "0000" %}
+        - "{{ COMIN_WAVE_RESTART | relpath(ROTDIR) }}/{{ prefix }}.restart.ww3.nc"
+
+        # TODO explicitly name the wave grid files to archive
         {% set WAVE_OUT_GRIDS_list = WAVE_OUT_GRIDS.split(' ') %}
         {% for grd in WAVE_OUT_GRIDS_list %}
         {% set tmpl_dict = ({ '${ROTDIR}':ROTDIR,
@@ -15,4 +25,8 @@ gdaswave:
         {% set file_path = COM_WAVE_GRID_RES_TMPL | replace_tmpl(tmpl_dict) %}
         - "{{ file_path | relpath(ROTDIR) }}/{{ head }}*"
         {% endfor %}
-        - "{{ COMIN_WAVE_STATION | relpath(ROTDIR) }}/{{ head }}*"
+
+        # Wave point output
+        - "{{ COMIN_WAVE_STATION | relpath(ROTDIR) }}/{{ head }}bull.tar"
+        - "{{ COMIN_WAVE_STATION | relpath(ROTDIR) }}/{{ head }}cbull.tar"
+        - "{{ COMIN_WAVE_STATION | relpath(ROTDIR) }}/{{ head }}spec.tar.gz"

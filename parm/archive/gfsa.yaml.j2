@@ -6,7 +6,7 @@ gfsa:
         # Logs
         # TODO explicitly name all logs to include
         {% for log in glob("logs/" ~ cycle_YMDH ~ "/gfs*.log") %}
-        {% if not "gfs_arch_tars.log" in log %}
+        {% if not "tar" in log %}
         - "{{ log }}"
         {% endif %}
         {% endfor %}
@@ -56,7 +56,6 @@ gfsa:
             {% endfor %}
         - "{{ COMIN_SNOW_ANALYSIS | relpath(ROTDIR) }}/{{ head }}snowstat.tgz"
         - "{{ COMIN_CONF | relpath(ROTDIR) }}/{{ head }}snowanlvar.yaml"
-        - "{{ COMIN_SNOW_ANLMON | relpath(ROTDIR) }}/{{ head }}snow_iodastat.tgz"
         {% endif %}
 
         # BUFR inputs
