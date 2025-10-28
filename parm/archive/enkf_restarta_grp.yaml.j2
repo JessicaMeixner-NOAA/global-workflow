@@ -6,8 +6,11 @@ enkf_restarta_grp:
             {% set imem = mem - first_group_mem %}
         # Construct the pertinent member COM directories
             {% set COMIN_ATMOS_ANALYSIS_MEM = COMIN_ATMOS_ANALYSIS_MEM_list[imem] %}
+<<<<<<< HEAD
             {% set COMIN_OCEAN_ANALYSIS_MEM = COMIN_OCEAN_ANALYSIS_MEM_list[imem] %}
             {% set COMIN_ICE_ANALYSIS_MEM = COMIN_ICE_ANALYSIS_MEM_list[imem] %}
+=======
+>>>>>>> EMC/develop
             {% set COMIN_ATMOS_HISTORY_MEM = COMIN_ATMOS_HISTORY_MEM_list[imem] %}
             {% set COMIN_ATMOS_RESTART_MEM = COMIN_ATMOS_RESTART_MEM_list[imem] %}
             {% set COMIN_OCEAN_RESTART_MEM = COMIN_OCEAN_RESTART_MEM_list[imem] %}
