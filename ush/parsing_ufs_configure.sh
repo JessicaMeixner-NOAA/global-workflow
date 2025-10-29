@@ -38,6 +38,9 @@ local med_omp_num_threads="${MEDTHREADS}"
 # vector remapping
 local MAPUV3D=true
 
+#route handles 
+local USE_FV3_ROUTEHANDLES=.false.
+
 if [[ "${cpl}" = ".true." ]]; then
   local coupling_interval_slow_sec="${CPL_SLOW}"
 fi
