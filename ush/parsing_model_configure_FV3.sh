@@ -55,6 +55,7 @@ local IMO=${LONB_IMO}
 local JMO=${LATB_JMO}
 local OUTPUT_FH=${FV3_OUTPUT_FH_NML}
 local IAU_OFFSET=${IAU_OFFSET:-0}
+local USE_FV3_ROUTEHANDLES=.false.
 
 local USE_FV3_ROUTEHANDLES=.false.
 

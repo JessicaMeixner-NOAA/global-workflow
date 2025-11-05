@@ -476,7 +476,6 @@ local LSOIL_INCR=${LSOIL_INCR:-2}
 local LAND_IAU_FILTER_INC=".false."
 local LAND_IAU_UPD_STC=".true."
 local LAND_IAU_UPD_SLC=".true."
-local LAND_IAU_DP_STCSMC_ADJ=".true."
 local LAND_IAU_DO_STCSMC_ADJ=".true."
 local LAND_IAU_MIN_T_INC=0.0001
 local LAND_IAU_MIN_SLC_INC=0.000001
