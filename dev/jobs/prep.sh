@@ -96,6 +96,26 @@ else
 fi
 
 ###############################################################
+# If requested, copy bias correction files from source or stait to analysis directories
+# TODO: remove this when JEDI ATM can cycle bias correction coefficents
+if [[ ${RUN} == "gdas" && ${COPY_BIASCOR_SOURCE:-"NO"} == "YES" ]]; then
+    for file in abias abias_pc abias_air; do
+        if [[ -s "${SOURCE_BIASCOR}/${file}.${GDUMP}.${gPDY}${gcyc}" ]]; then
+            cpreq "${SOURCE_BIASCOR}/${file}.${GDUMP}.${gPDY}${gcyc}" "${COMOUT_ATMOS_ANALYSIS_PREV}/${GDUMP}.t${gcyc}z.${file}"
+            cpreq "${SOURCE_BIASCOR}/${file}.${GDUMP}.${gPDY}${gcyc}" "${COMOUT_ATMOS_ANALYSIS_PREV}/${GDUMP}.t${gcyc}z.${file}.txt"
+        fi
+    done
+fi
+if [[ ${RUN} == "gdas" && ${COPY_BIASCOR_STATIC:-"NO"} == "YES" ]]; then
+    for file in abias abias_pc abias_air; do
+        if [[ -s "${COMOUT_ATMOS_ANALYSIS_PREV}/${GDUMP}.t${gcyc}z.${file}.txt" ]]; then
+            mkdir -p "${COMOUT_ATMOS_ANALYSIS}"
+            cpreq "${COMOUT_ATMOS_ANALYSIS_PREV}/${GDUMP}.t${gcyc}z.${file}.txt" "${COMOUT_ATMOS_ANALYSIS}/${GDUMP}.t${cyc}z.${file}.txt"
+        fi
+    done
+fi
+
+###############################################################
 # Generate prepbufr files from dumps and prior gdas guess
 rm -f "${COMOUT_OBS}/${OPREFIX}prepbufr"
 rm -f "${COMOUT_OBS}/${OPREFIX}prepbufr.acft_profiles"
@@ -158,6 +178,23 @@ done
 export err
 if [[ ${err} -ne 0 ]]; then
     err_exit "Failed to obtain/create ${files}, ABORT!"
+fi
+
+################################################################################
+# If requested, create radiance bias correction files for JEDI
+if [[ ${RUN} == "gdas" && ${CONVERT_BIASCOR:-"NO"} == "YES" ]]; then
+    cd "${DATAROOT}" || true
+    "${HOMEgfs}/ush/gsi_satbias2ioda_all.sh"
+    export err=$?
+    if [[ ${err} -ne 0 ]]; then
+        err_exit "gsi_satbias2ioda failed, ABORT!"
+    fi
+
+    # Remove temporary working directory
+    cd "${DATAROOT}" || true
+    if [[ "${KEEPDATA}" == "NO" ]]; then
+        rm -rf "${DATA}"
+    fi
 fi
 
 ################################################################################
