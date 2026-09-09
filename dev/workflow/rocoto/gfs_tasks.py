@@ -2341,7 +2341,7 @@ class GFSTasks(Tasks):
         # Split up the tarball_types based on the run and configuration options
         # Define all possible tarball types
         if self.run == 'gfs':
-            tarball_types = ['gfsa', 'gfsb']
+            tarball_types = ['gfsa']
 
             # Add optional tarballs based on configuration
             if self._configs['arch_tars'].get('ARCH_GAUSSIAN', True):
@@ -2356,7 +2356,7 @@ class GFSTasks(Tasks):
                 tarball_types.append('chem')
 
             if self.options['do_ocean']:
-                tarball_types.extend(['ocean_6hravg', 'ocean_native', 'gfs_flux_1p00'])
+                tarball_types.extend(['ocean_6hravg', 'ocean_native'])
                 if self.options.get('do_jediocnvar', False) and self.app_config.mode == 'cycled':
                     tarball_types.append('gfsocean_analysis')
 
