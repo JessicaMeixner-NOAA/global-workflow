@@ -118,7 +118,7 @@ suites:
                 jgfs_atmos_gempak:
                   triggers:
                   - task: jgfs_atmos_analysis
-                jgfs_atmos_npoess_pgrb2_0p5deg:
+                jgfs_atmos_npoess_pgrb2_0p25deg:
                   triggers:
                   - task: jgfs_atmos_post_anl
                     state: active

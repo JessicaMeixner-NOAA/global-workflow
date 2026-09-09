@@ -1807,7 +1807,7 @@ class GFSTasks(Tasks):
 
     def gempakpgrb2spec(self):
         deps = []
-        dep_dict = {'type': 'task', 'name': f'{self.run}_npoess_pgrb2_0p5deg'}
+        dep_dict = {'type': 'task', 'name': f'{self.run}_npoess_pgrb2_0p25deg'}
         deps.append(rocoto.add_dependency(dep_dict))
         dependencies = rocoto.create_dependency(dep=deps)
 
@@ -1849,7 +1849,7 @@ class GFSTasks(Tasks):
 
         return task
 
-    def npoess_pgrb2_0p5deg(self):
+    def npoess_pgrb2_0p25deg(self):
 
         deps = []
         dep_dict = {'type': 'task', 'name': f'{self.run}_atmanlprod'}
@@ -1859,7 +1859,7 @@ class GFSTasks(Tasks):
         dependencies = rocoto.create_dependency(dep=deps, dep_condition='and')
 
         resources = self.get_resource('npoess')
-        task_name = f'{self.run}_npoess_pgrb2_0p5deg'
+        task_name = f'{self.run}_npoess_pgrb2_0p25deg'
         task_dict = {'task_name': task_name,
                      'resources': resources,
                      'dependency': dependencies,
@@ -2300,7 +2300,7 @@ class GFSTasks(Tasks):
             elif self.run in ['gfs']:
                 if self.app_config.mode in ['cycled']:
                     if self.options['do_goes']:
-                        dep_dict = {'type': 'task', 'name': f'{self.run}_npoess_pgrb2_0p5deg'}
+                        dep_dict = {'type': 'task', 'name': f'{self.run}_npoess_pgrb2_0p25deg'}
                         deps.append(rocoto.add_dependency(dep_dict))
                         dep_dict = {'type': 'metatask', 'name': f'{self.run}_gempakgrb2spec'}
                         deps.append(rocoto.add_dependency(dep_dict))
@@ -2595,7 +2595,7 @@ class GFSTasks(Tasks):
                 elif self.run in ['gfs']:
                     if self.app_config.mode in ['cycled']:
                         if self.options['do_goes']:
-                            dep_dict = {'type': 'task', 'name': f'{self.run}_npoess_pgrb2_0p5deg'}
+                            dep_dict = {'type': 'task', 'name': f'{self.run}_npoess_pgrb2_0p25deg'}
                             deps.append(rocoto.add_dependency(dep_dict))
                             dep_dict = {'type': 'metatask', 'name': f'{self.run}_gempakgrb2spec'}
                             deps.append(rocoto.add_dependency(dep_dict))
