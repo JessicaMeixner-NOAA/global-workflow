@@ -2298,8 +2298,6 @@ class GFSTasks(Tasks):
                 dep_dict = {'type': 'task', 'name': f'{self.run}_gempakmetancdc'}
                 deps.append(rocoto.add_dependency(dep_dict))
             elif self.run in ['gfs']:
-                dep_dict = {'type': 'task', 'name': f'{self.run}_gempakmeta'}
-                deps.append(rocoto.add_dependency(dep_dict))
                 if self.app_config.mode in ['cycled']:
                     if self.options['do_goes']:
                         dep_dict = {'type': 'task', 'name': f'{self.run}_npoess_pgrb2_0p5deg'}
